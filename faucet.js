@@ -57,7 +57,9 @@ function handleFaucetRequest(userAddress) {
         xmlHttp.open("GET", process.env.BLOCKCHAIN_REST_SERVER + "/cosmos/auth/v1beta1/accounts/" + userAddress, false); // false for synchronous request
         xmlHttp.send(null);
         const accountResponse = JSON.parse(xmlHttp.responseText);
-        if (constants.FaucetList.length < constants.FAUCET_LIST_LIMIT && !constants.FaucetList.includes(userAddress) && accountResponse.code === 5) {
+        if (constants.FaucetList.length < constants.FAUCET_LIST_LIMIT &&
+            !constants.FaucetList.includes(userAddress) && 
+            accountResponse.code === 5) {
             constants.FaucetList.push(userAddress);
             console.log(userAddress, "ADDED TO LIST: total = ", constants.FaucetList.length);
             return JSON.stringify({result: "Success, your address will be faucet"});
