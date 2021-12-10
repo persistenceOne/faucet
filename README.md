@@ -1,0 +1,2 @@
+# faucet
+tendermint faucet
