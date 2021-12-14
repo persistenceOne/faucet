@@ -41,7 +41,7 @@ async function Transaction(wallet, signerAddress, msgs, fee, memo = '') {
 }
 
 async function MnemonicWalletWithPassphrase(mnemonic) {
-    const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: constants.prefix, bip39Password:'',hdPaths:[stringToPath("m/44'/118'/0'/0/0")]});
+    const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: constants.prefix, bip39Password:'',hdPaths:[stringToPath(constants.HD_PATH)]});
     const [firstAccount] = await wallet.getAccounts();
     return [wallet, firstAccount.address];
   
