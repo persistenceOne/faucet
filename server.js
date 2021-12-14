@@ -4,10 +4,11 @@ const app = express()
 const port = 5000
 const cors = require('cors')
 const rateLimit = require("express-rate-limit")
+const constants = require("./constants")
 
 const limiter = rateLimit({
-    windowMs: 24 * 60 * 60 * 1000, // 24 hours
-    max: 10, // limit each IP to 10 requests per windowMs
+    windowMs: constants.IP_WINDOW, // 24 hours
+    max: constants.IP_DRIP_LIMIT, // limit each IP to 10 requests per windowMs
     message: "Too many drip requested from this IP, please try again in 24Hrs"
   });
 

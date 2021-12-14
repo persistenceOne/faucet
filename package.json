@@ -5,10 +5,9 @@
   "keywords": [],
   "main": "server.js",
   "dependencies": {
-    "@cosmjs/amino": "^v0.25.4",
-    "@cosmjs/crypto": "^v0.25.4",
-    "@cosmjs/encoding": "^v0.25.4",
-    "@cosmjs/launchpad": "^v0.25.4",
+    "@cosmjs/amino": "^0.26.5",
+    "@cosmjs/crypto": "^0.26.5",
+    "@cosmjs/encoding": "^0.26.5",
     "@cosmjs/stargate": "^0.26.5",
     "axios": "^0.21.1",
     "cors": "^2.8.5",
@@ -24,7 +23,9 @@
     "dotenv": "^10.0.0",
     "typescript": "3.3.3"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "node server.js"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
