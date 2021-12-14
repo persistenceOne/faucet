@@ -31,7 +31,6 @@ function msg(inputs, outputs) {
             ],
             outputs: outputs,//toAddress
         }),
-        test: MsgMultiSend
     }
 }
 
@@ -65,7 +64,7 @@ function runner() {
                     ],
                 }));
                 const msgs = msg(addr, outputs);
-                await Transaction(
+                Transaction(
                         wallet, 
                         addr, 
                         [msgs], 
