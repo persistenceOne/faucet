@@ -36,7 +36,6 @@ function msg(inputs, outputs) {
 
 async function Transaction(wallet, signerAddress, msgs, fee, memo = '') {
     const cosmJS = await SigningStargateClient.connectWithSigner(rpc, wallet);
-    const res = msgs[0].value.outputs[0].coins[0];
     return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo); //DeliverTxResponse, 0 iff success  
 }
 
@@ -64,13 +63,14 @@ function runner() {
                     ],
                 }));
                 const msgs = msg(addr, outputs);
-                Transaction(
-                        wallet, 
-                        addr, 
-                        [msgs], 
-                        {"amount": [{amount : (parseInt(constants.gas) * GasPrice.fromString(constants.gas_price).amount).toString(), denom : constants.DENOM}], "gas": constants.gas},
-                        "Thanks for using Faucet"
-                    ).then(response => console.log(response));
+                const response = await Transaction(
+                    wallet, 
+                    addr, 
+                    [msgs], 
+                    {"amount": [{amount : (parseInt(constants.gas) * GasPrice.fromString(constants.gas_price).amount).toString(), denom : constants.DENOM}], "gas": constants.gas},
+                    "Thanks for using Faucet"
+                );
+                console.log(response);
                 constants.FaucetList.splice(0, constants.FaucetList.length);
             }catch(e){
                 console.log("Transaction Failed: ", e);

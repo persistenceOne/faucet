@@ -3,7 +3,7 @@
 Use the following command to faucet tokens into your wallet address:
 
 ```c
-curl -d '{"address":"cosmos1...<cosmos wallet address>"}' -H 'Content-Type: application/json' https://api.testnet.assetmantle.one/faucet/faucetRequest
+curl -d '{"address":"cosmos1...<cosmos wallet address>"}' -H 'Content-Type: application/json' http://localhost:5000/faucetRequest
 ```
 
 ## Additional Resources:
