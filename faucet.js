@@ -70,7 +70,7 @@ function runner() {
                         addr, 
                         [msgs], 
                         {"amount": [{amount : (parseInt(constants.gas) * GasPrice.fromString(constants.gas_price).amount).toString(), denom : constants.DENOM}], "gas": constants.gas},
-                        "have fun"
+                        "Thanks for using Faucet"
                     ).then(response => console.log(response));
                 constants.FaucetList.splice(0, constants.FaucetList.length);
             }catch(e){
