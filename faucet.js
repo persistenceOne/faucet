@@ -49,9 +49,15 @@ async function MnemonicWalletWithPassphrase(mnemonic) {
 
 }
 
-function runner() {
+function delay(x) {
+    return new Promise((done, fail) => setTimeout(done, x));
+}
+
+async function runner() {
     console.log("started faucet loop")
-    setInterval(async function () {
+
+    // noinspection InfiniteLoopJS
+    while (true) {
         if (constants.FaucetList.length > 0) {
             try {
                 let [wallet, addr] = await MnemonicWalletWithPassphrase(mnemonic);
@@ -81,7 +87,8 @@ function runner() {
         } else {
             console.log("No Accounts to faucet");
         }
-    }, constants.FAUCET_SLEEP);
+        await delay(constants.FAUCET_SLEEP) // this allows the function to be async
+    }
 }
 
 function handleFaucetRequest(userAddress) {
