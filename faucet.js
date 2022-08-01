@@ -1,16 +1,15 @@
 require("dotenv").config();
-const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const constants = require("./constants");
 const {Secp256k1HdWallet} = require("@cosmjs/amino");
-const {SigningStargateClient,GasPrice} = require("@cosmjs/stargate");
+const {SigningStargateClient, GasPrice} = require("@cosmjs/stargate");
 const {stringToPath} = require("@cosmjs/crypto");
-const restAPI=process.env.BLOCKCHAIN_REST_SERVER;
 const rpc = process.env.RPC;
 const mnemonic = process.env.FAUCET_MNEMONIC;
 const msgSendTypeUrl = "/cosmos.bank.v1beta1.MsgMultiSend";
-const {MsgMultiSend, fromPartial} = require("cosmjs-types/cosmos/bank/v1beta1/tx");
+const {MsgMultiSend} = require("cosmjs-types/cosmos/bank/v1beta1/tx");
+const {fromBech32} = require("@cosmjs/encoding");
 
-function trimWhiteSpaces(data){
+function trimWhiteSpaces(data) {
     return data.split(' ').join('');
 }
 
@@ -34,25 +33,29 @@ function msg(inputs, outputs) {
     }
 }
 
-async function Transaction(wallet, signerAddress, msgs, fee, memo = '') {
-    const cosmJS = await SigningStargateClient.connectWithSigner(rpc, wallet);
-    return await cosmJS.signAndBroadcast(signerAddress, msgs, fee, memo); //DeliverTxResponse, 0 iff success  
+async function Transaction(wallet, signerAddress, msgs, memo = '') {
+    const cosmJS = await SigningStargateClient.connectWithSigner(rpc, wallet, {gasPrice: GasPrice.fromString(constants.gas_price)});
+    return await cosmJS.signAndBroadcast(signerAddress, msgs, "auto", memo); //DeliverTxResponse, 0 iff success
 }
 
 async function MnemonicWalletWithPassphrase(mnemonic) {
-    const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {prefix: constants.prefix, bip39Password:'',hdPaths:[stringToPath(constants.HD_PATH)]});
+    const wallet = await Secp256k1HdWallet.fromMnemonic(mnemonic, {
+        prefix: constants.prefix,
+        bip39Password: '',
+        hdPaths: [stringToPath(constants.HD_PATH)]
+    });
     const [firstAccount] = await wallet.getAccounts();
     return [wallet, firstAccount.address];
-  
+
 }
 
 function runner() {
-    setInterval(async function ()  {
+    setInterval(async function () {
         if (constants.FaucetList.length > 0) {
-            try{
+            try {
                 let [wallet, addr] = await MnemonicWalletWithPassphrase(mnemonic);
                 let outputs = [];
-                
+
                 constants.FaucetList.forEach(reciever => outputs.push({
                     address: trimWhiteSpaces(reciever),
                     coins: [
@@ -64,43 +67,38 @@ function runner() {
                 }));
                 const msgs = msg(addr, outputs);
                 const response = await Transaction(
-                    wallet, 
-                    addr, 
-                    [msgs], 
-                    {"amount": [{amount : (parseInt(constants.gas) * GasPrice.fromString(constants.gas_price).amount).toString(), denom : constants.DENOM}], "gas": constants.gas},
+                    wallet,
+                    addr,
+                    [msgs],
                     "Thanks for using Faucet"
                 );
                 console.log(response);
                 constants.FaucetList.splice(0, constants.FaucetList.length);
-            }catch(e){
+            } catch (e) {
                 console.log("Transaction Failed: ", e);
-            }           
+            }
         } else {
-             console.log("No Accounts to faucet");
+            console.log("No Accounts to faucet");
         }
-    }, 10000);
+    }, constants.FAUCET_SLEEP);
 }
 
 function handleFaucetRequest(userAddress) {
     try {
-        let xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", restAPI + "/cosmos/auth/v1beta1/accounts/" + userAddress, false); // false for synchronous request
-        xmlHttp.send(null);
-        const accountResponse = JSON.parse(xmlHttp.responseText);
+        fromBech32(userAddress)
         if (constants.FaucetList.length < constants.FAUCET_LIST_LIMIT &&
-            !constants.FaucetList.includes(userAddress) && 
-            accountResponse.code === 5) {
+            !constants.FaucetList.includes(userAddress)) {
             constants.FaucetList.push(userAddress);
             console.log(userAddress, "ADDED TO LIST: total = ", constants.FaucetList.length);
-            return JSON.stringify({result: "Success, your address will be faucet"});
+            return JSON.stringify({result: "Success, your address will be faucet: " + userAddress});
         } else {
             console.log(userAddress, "NOT ADDED: total = ", constants.FaucetList.length);
-            return JSON.stringify({result: "Failure, your account cannot be faucet right now, please try after sometime"});
+            return JSON.stringify({result: "Failure, your account cannot be faucet right now, please try after sometime: " + userAddress});
         }
     } catch (e) {
-        return JSON.stringify({result:"Failure, Incorrect Address"});
+        return JSON.stringify({result: "Failure, Incorrect Address: " + userAddress});
     }
 
 }
 
-module.exports = {runner, handleFaucetRequest,MnemonicWalletWithPassphrase,Transaction};
+module.exports = {runner, handleFaucetRequest, MnemonicWalletWithPassphrase, Transaction};

@@ -1,7 +1,6 @@
 const iterator = require("./faucet")
 const express = require('express')
 const app = express()
-const port = 5000
 const cors = require('cors')
 const rateLimit = require("express-rate-limit")
 const constants = require("./constants")
@@ -21,8 +20,8 @@ app.post('/faucetRequest', limiter, (req, res) => {
 
 iterator.runner()
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
+app.listen(constants.PORT, () => {
+    console.log(`Example app listening at http://localhost:${constants.PORT}`)
 })
 
 
