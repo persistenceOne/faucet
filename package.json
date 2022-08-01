@@ -5,12 +5,12 @@
   "keywords": [],
   "main": "server.js",
   "dependencies": {
-    "@cosmjs/amino": "^0.26.5",
-    "@cosmjs/crypto": "^0.26.5",
-    "@cosmjs/encoding": "^0.26.5",
-    "@cosmjs/stargate": "^0.26.5",
+    "@cosmjs/amino": "^0.28.11",
+    "@cosmjs/crypto": "^0.28.11",
+    "@cosmjs/encoding": "^0.28.11",
+    "@cosmjs/stargate": "^0.28.11",
     "cors": "^2.8.5",
-    "cosmjs-types": "^0.4.0",
+    "cosmjs-types": "^0.5.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.5.1",
     "xmlhttprequest": "^1.8.0"

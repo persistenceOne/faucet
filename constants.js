@@ -1,15 +1,15 @@
-
-const FAUCET_LIST_LIMIT = 15;
-const AMOUNT = "1";
-const DENOM = "uatom";
-const CHAIN_ID = "pstake-staking-gala";
+const FAUCET_LIST_LIMIT = +process.env.FAUCET_LIST_LIMIT;
+const AMOUNT = process.env.AMOUNT;
+const DENOM = process.env.DENOM;
+const CHAIN_ID = process.env.CHAIN_ID;
+const prefix= process.env.PREFIX;
+const gas_price = process.env.GAS_PRICE;
+const IP_WINDOW = +process.env.IP_WINDOW;
+const IP_DRIP_LIMIT = +process.env.IP_DRIP_LIMIT;
+const HD_PATH = process.env.HD_PATH;
+const FAUCET_SLEEP = +process.env.FAUCET_SLEEP;
+const PORT = +process.env.FAUCET_PORT
 let FaucetList=[];
-const prefix= "cosmos";
-const gas_price = "0uatom";
-const gas = "500000";
-const IP_WINDOW = 24 * 60 * 60 * 1000;
-const IP_DRIP_LIMIT = 10;
-const HD_PATH = "m/44'/118'/0'/0/0";
 module.exports = {
     FAUCET_LIST_LIMIT,
     AMOUNT,
@@ -18,8 +18,9 @@ module.exports = {
     FaucetList,
     prefix,
     gas_price,
-    gas,
     IP_WINDOW,
     IP_DRIP_LIMIT,
-    HD_PATH
+    FAUCET_SLEEP,
+    HD_PATH,
+    PORT
 }
