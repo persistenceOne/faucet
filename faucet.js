@@ -13,13 +13,13 @@ function trimWhiteSpaces(data) {
     return data.split(' ').join('');
 }
 
-function msg(inputs, outputs) {
+function msg(inputAddr, outputs) {
     return {
         typeUrl: msgSendTypeUrl,
         value: MsgMultiSend.fromPartial({
             inputs: [
                 {
-                    address: trimWhiteSpaces(inputs),//fromAddress
+                    address: trimWhiteSpaces(inputAddr),//fromAddress
                     coins: [
                         {
                             denom: constants.DENOM,
@@ -50,14 +50,15 @@ async function MnemonicWalletWithPassphrase(mnemonic) {
 }
 
 function runner() {
+    console.log("started faucet loop")
     setInterval(async function () {
         if (constants.FaucetList.length > 0) {
             try {
                 let [wallet, addr] = await MnemonicWalletWithPassphrase(mnemonic);
                 let outputs = [];
 
-                constants.FaucetList.forEach(reciever => outputs.push({
-                    address: trimWhiteSpaces(reciever),
+                constants.FaucetList.forEach(receiver => outputs.push({
+                    address: trimWhiteSpaces(receiver),
                     coins: [
                         {
                             denom: constants.DENOM,
