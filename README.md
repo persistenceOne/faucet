@@ -6,6 +6,16 @@ Use the following command to faucet tokens into your wallet address:
 curl -d '{"address":"cosmos1...<cosmos wallet address>"}' -H 'Content-Type: application/json' http://localhost:5000/faucetRequest
 ```
 
+## Build
+```
+npm ci
+```
+
+## Start
+```
+npm start
+```
+
 ## Additional Resources:
 Features to be added eventually:
 - ### [Discord Bot](https://github.com/CosmosContracts/cosmos-discord-faucet)
