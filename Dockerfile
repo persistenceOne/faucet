@@ -1,12 +1,10 @@
 FROM node:slim as build-env
 
-
 WORKDIR /faucet/
 COPY . .
 
 RUN npm ci
 RUN npx esbuild server.js --bundle --platform=node --outfile=index.js
-
 
 FROM node:slim
 
