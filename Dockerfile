@@ -1,15 +1,19 @@
-# Use Alpine and install Node.js which is 50% smaller than the -alpine version of the node
-# image (53 MB including the faucet app).
-FROM alpine:3.15 as build-env
-# Installs Node.js 16 (https://pkgs.alpinelinux.org/packages?name=nodejs&branch=v3.15)
+FROM node:slim as build-env
 
-RUN apk add --update nodejs
-RUN apk add --update npm
-RUN apk add --update ca-certificates jq bash curl
 
-WORKDIR /home/faucet/
+WORKDIR /faucet/
 COPY . .
 
 RUN npm ci
+RUN npx esbuild server.js --bundle --platform=node --outfile=index.js
+
+
+FROM node:slim
+
+WORKDIR /app/
+
+COPY --from=build-env /faucet/index.js /app/index.js
+
+CMD node /app/index.js
 
 EXPOSE 5000
