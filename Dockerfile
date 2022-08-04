@@ -10,6 +10,6 @@ RUN apk add --update ca-certificates jq bash curl
 WORKDIR /home/faucet/
 COPY . .
 
-RUN npm install
+RUN npm ci
 
 EXPOSE 5000
